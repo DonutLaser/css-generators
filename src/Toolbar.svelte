@@ -1,41 +1,43 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+    import type { Tool } from "./scripts/types";
     import ToolbarButton from "./ToolbarButton.svelte";
 
-    const tabs = [
-        { name: "box-shadow", title: "BS" },
-        { name: "text-shadow", title: "TS" },
-        { name: "gradient", title: "Grdnt" },
-        { name: "font", title: "Fnt" },
-        { name: "grid", title: "Grd" },
-        { name: "borders", title: "Brdrs" },
-        { name: "animations", title: "Anmtin" },
-    ];
+    export let tools: Tool[] = [];
 
-    let activeTab = "box-shadow";
+    $: activeTool = tools[0].name;
 
-    function openTab(tab: string) {
-        activeTab = tab;
+    function openTab(toolName: string) {
+        activeTool = toolName;
+        dispatch("tool-opened", activeTool);
     }
 </script>
 
 <div class="toolbar">
-    {#each tabs as tab}
+    {#each tools as tool}
         <ToolbarButton
             on:click={() => {
-                openTab(tab.name);
+                openTab(tool.name);
             }}
-            active={activeTab === tab.name}>{tab.title}</ToolbarButton>
+            active={activeTool === tool.name}>{tool.title}</ToolbarButton>
     {/each}
 </div>
 
 <style>
     .toolbar {
-        position: absolute;
-        top: 50%;
-        left: 1rem;
-        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
         width: fit-content;
-        height: fit-content;
+        height: 100%;
+
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        background-color: #eee;
+        border-right: 1px solid #ddd;
     }
 </style>

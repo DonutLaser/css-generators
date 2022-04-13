@@ -1,4 +1,7 @@
 {
+    "svelteStrictMode": false,
     "svelteBracketNewLine": false,
-    "tabWidth": 4
+    "tabWidth": 4,
+    "svelteAllowShorthand": true,
+    "printWidth": 200
 }
