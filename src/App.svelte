@@ -1,5 +1,6 @@
 <script lang="ts">
     import BoxShadow from "./BoxShadow.svelte";
+    import TextShadow from "./TextShadow.svelte";
 
     import Main from "./Main.svelte";
     import type { Tool } from "./scripts/types";
@@ -8,7 +9,7 @@
 
     const tools: Tool[] = [
         { name: "box-shadow", title: "BS", component: BoxShadow },
-        { name: "text-shadow", title: "TS", component: null },
+        { name: "text-shadow", title: "TS", component: TextShadow },
         { name: "gradient", title: "Grdnt", component: null },
         { name: "font", title: "Fnt", component: null },
         { name: "grid", title: "Grd", component: null },

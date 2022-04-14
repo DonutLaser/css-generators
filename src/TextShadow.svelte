@@ -1,28 +1,26 @@
 <script lang="ts">
     import ColorPicker from "./ColorPicker.svelte";
     import Slider from "./Slider.svelte";
-    import Toggle from "./Toggle.svelte";
 
-    interface BoxShadow {
+    interface TextShadow {
         id: number;
         x: number;
         y: number;
         blur: number;
-        spread: number;
-        inset: boolean;
         color: string;
         opacity: number;
     }
 
-    const MAX_SHADOWS = 12;
+    const MAX_SHADOWS = 18;
+
     let nextId = 0;
 
-    let shadows: BoxShadow[] = [];
+    let shadows: TextShadow[] = [];
     shadows[0] = newShadow();
 
-    let css = `box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1)`;
+    let css = `text-shadow: 0px 0px 0px rgba(0, 0, 0, 1)`;
 
-    function propertyChanged(shadow: BoxShadow, property: string, event: CustomEvent<any>) {
+    function propertyChanged(shadow: TextShadow, property: string, event: CustomEvent<any>) {
         shadow[property] = event.detail;
         generateCSS();
     }
@@ -42,14 +40,12 @@
         generateCSS();
     }
 
-    function newShadow(): BoxShadow {
+    function newShadow(): TextShadow {
         return {
             id: nextId++,
             x: 0,
             y: 0,
             blur: 0,
-            spread: 0,
-            inset: false,
             color: "#000000",
             opacity: 100,
         };
@@ -61,18 +57,17 @@
             cssLines.push(generateShadowCSS(shadow));
         }
 
-        css = `box-shadow: ${cssLines.join(", ")};`;
+        css = `text-shadow: ${cssLines.join(", ")};`;
     }
 
-    function generateShadowCSS(shadow: BoxShadow) {
+    function generateShadowCSS(shadow: TextShadow) {
         const r = parseInt(shadow.color.substring(1, 3), 16);
         const g = parseInt(shadow.color.substring(3, 5), 16);
         const b = parseInt(shadow.color.substring(5, 7), 16);
 
-        const insetString = shadow.inset ? "inset " : "";
         const alpha = shadow.opacity / 100;
 
-        return `${insetString}${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px rgba(${r}, ${g}, ${b}, ${alpha})`;
+        return `${shadow.x}px ${shadow.y}px ${shadow.blur}px rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     async function copy() {
@@ -80,7 +75,7 @@
     }
 </script>
 
-<div class="box-shadow">
+<div class="text-shadow">
     <div class="controls">
         {#each shadows as shadow, index (shadow.id)}
             <div class="control">
@@ -100,24 +95,10 @@
                             propertyChanged(shadow, "y", e);
                         }} />
                 </div>
-                <div class="horizontal-group">
-                    <Slider
-                        name={"Blur radius"}
-                        on:changed={(e) => {
-                            propertyChanged(shadow, "blur", e);
-                        }} />
-                    <Slider
-                        name={"Spread radius"}
-                        on:changed={(e) => {
-                            propertyChanged(shadow, "spread", e);
-                        }} />
-                </div>
-                <Toggle
-                    name={"Mode"}
-                    offName={"Default"}
-                    onName={"Inset"}
+                <Slider
+                    name={"Blur radius"}
                     on:changed={(e) => {
-                        propertyChanged(shadow, "inset", e);
+                        propertyChanged(shadow, "blur", e);
                     }} />
                 <div class="horizontal-group">
                     <ColorPicker
@@ -149,7 +130,7 @@
     </div>
     <div class="final">
         <div class="preview">
-            <div class="preview-box" style={css} />
+            <h1 class="preview-text" style={css}>Hello, world!</h1>
         </div>
         <div class="css">
             {css}
@@ -159,7 +140,7 @@
 </div>
 
 <style>
-    .box-shadow {
+    .text-shadow {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -172,12 +153,12 @@
     .controls {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
         column-gap: 1rem;
         row-gap: 1rem;
 
         width: 100%;
-        height: 70%;
+        height: 80%;
 
         padding: 1rem;
     }
@@ -249,7 +230,7 @@
         justify-content: center;
 
         width: 100%;
-        height: 30%;
+        height: 20%;
 
         background-color: #d9d9d9;
 
@@ -267,12 +248,11 @@
         padding: 1rem;
     }
 
-    .preview-box {
-        width: 50%;
-        height: 50%;
+    .preview-text {
+        color: #a0a0a0;
+        font-size: 4rem;
 
-        background-color: #a0a0a0;
-        border-radius: 0.2rem;
+        user-select: none;
     }
 
     .css {
